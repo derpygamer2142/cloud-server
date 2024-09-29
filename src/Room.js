@@ -1,3 +1,5 @@
+const fs = require("fs")
+
 /**
  * @typedef {import('./Client')} Client
  */
@@ -15,7 +17,7 @@ class Room {
    * @param {RoomID} id
    */
   constructor(id) {
-    /**
+    /** 
      * Unique ID given to this room.
      * @type {RoomID}
      * @readonly
@@ -46,6 +48,25 @@ class Room {
      * Maximum number of clients that can be connected to this room.
      */
     this.maxClients = 128;
+    const o = fs.readFileSync(__dirname + "/db.json","utf-8")
+    const parsed = JSON.parse(o)
+    console.log("loaded db - ", parsed)
+    if (Object.prototype.hasOwnProperty.call(parsed, this.id)) {
+      Object.keys(parsed[this.id]).forEach((value) => {
+        this.variables.set(value, parsed[this.id][value])
+      })
+    }
+    else {
+      parsed[this.id] = {}
+      fs.writeFileSync(__dirname + "/db.json", JSON.stringify(parsed))
+    }
+    
+  }
+
+  updatedb(variable,value) {
+      const parsed = JSON.parse(fs.readFileSync(__dirname + "/db.json","utf-8"))
+      parsed[this.id][variable] = value
+      fs.writeFileSync(__dirname + "/db.json",JSON.stringify(parsed))
   }
 
   /**
@@ -108,6 +129,7 @@ class Room {
       throw new Error('Too many variables');
     }
     this.variables.set(name, value);
+    this.updatedb(name, value)
   }
 
   /**
@@ -122,6 +144,7 @@ class Room {
       throw new Error('Variable does not exist');
     }
     this.variables.set(name, value);
+    this.updatedb(name,value)
   }
 
   /**
@@ -134,6 +157,9 @@ class Room {
       throw new Error('Variable does not exist');
     }
     this.variables.delete(name);
+    const parsed = JSON.parse(fs.readFileSync(__dirname + "/db.json","utf-8"))
+    delete parsed[this.id][name]
+    fs.writeFileSync(__dirname + "/db.json",JSON.stringify(parsed))
   }
 
   /**

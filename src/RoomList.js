@@ -1,11 +1,11 @@
 const Room = require('./Room');
 const ConnectionError = require('./ConnectionError');
 const logger = require('./logger');
-
+const fs = require("fs")
 /** Delay between janitor runs. */
 const JANITOR_INTERVAL = 1000 * 60;
 /** Time a room must be empty for before it may be removed by the janitor. */
-const JANITOR_THRESHOLD = 1000 * 60 * 60;
+const JANITOR_THRESHOLD = Infinity//1000 * 60 * 60;
 /** Maximum amount of rooms that can exist at once. Empty rooms are included in this limit. */
 const MAX_ROOMS = 16384;
 
@@ -31,6 +31,12 @@ class RoomList {
     this.janitor = this.janitor.bind(this);
     /** @private */
     this.janitorInterval = null;
+
+    const parsed = JSON.parse(fs.readFileSync(__dirname + "/db.json","utf-8"))
+    // @ts-ignore
+    parsed.rooms.forEach((v) => {
+      this.create(v)
+    })
   }
 
   /**
@@ -76,6 +82,11 @@ class RoomList {
     if (this.enableLogging) {
       logger.info('Created room: ' + id);
     }
+
+    const parsed = JSON.parse(fs.readFileSync(__dirname + "/db.json","utf-8"))
+    // @ts-ignore
+    parsed.rooms.push(id)
+    fs.writeFileSync(__dirname + "/db.json", JSON.stringify(parsed))
     return room;
   }
 
