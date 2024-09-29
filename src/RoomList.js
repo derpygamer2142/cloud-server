@@ -84,9 +84,12 @@ class RoomList {
     }
 
     const parsed = JSON.parse(fs.readFileSync(__dirname + "/db.json","utf-8"))
-    // @ts-ignore
-    parsed.rooms.push(id)
-    fs.writeFileSync(__dirname + "/db.json", JSON.stringify(parsed))
+    if (!parsed.rooms.includes(id)) {
+      // @ts-ignore
+      parsed.rooms.push(id)
+      fs.writeFileSync(__dirname + "/db.json", JSON.stringify(parsed))
+    }
+    
     return room;
   }
 

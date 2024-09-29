@@ -51,7 +51,7 @@ class Room {
     const o = fs.readFileSync(__dirname + "/db.json","utf-8")
     const parsed = JSON.parse(o)
     console.log("loaded db - ", parsed)
-    if (Object.prototype.hasOwnProperty.call(parsed, this.id)) {
+    if (parsed.rooms.includes(this.id)) {
       Object.keys(parsed[this.id]).forEach((value) => {
         this.variables.set(value, parsed[this.id][value])
       })
