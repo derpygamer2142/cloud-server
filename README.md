@@ -8,9 +8,7 @@ It uses a protocol very similar to Scratch 3's cloud variable protocol. See doc/
 
 ## Restrictions
 
-This server does not implement long term variable storage. All data is stored only in memory (never on disk) and are removed promptly when rooms are emptied or the server restarts.
-
-This server also does not implement history logs.
+This server does not implement history logs.
 
 ## Setup
 
