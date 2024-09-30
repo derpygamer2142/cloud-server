@@ -1,5 +1,7 @@
 # cloud-server
 
+Forked to add variable storage/loading(really bad, don't use in large scale production).
+
 A cloud data server for Scratch 3. Used by [forkphorus](https://forkphorus.github.io/) and [TurboWarp](https://turbowarp.org/).
 
 It uses a protocol very similar to Scratch 3's cloud variable protocol. See doc/protocol.md for further details.
